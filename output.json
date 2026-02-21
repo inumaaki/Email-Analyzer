@@ -1,0 +1,72 @@
+{
+    "headers": {
+        "Message-ID": "<1234567890@baddomain.com>",
+        "Date": "Wed, 01 Mar 2023 14:00:00 -0500",
+        "From": "IT Support <support@spoofed.com>",
+        "To": "victim@example.com",
+        "Reply-To": "attacker@baddomain.com",
+        "Subject": "URGENT: Verify your account immediately",
+        "Return-Path": "<attacker@baddomain.com>"
+    },
+    "authentication": {
+        "spf": "fail",
+        "dkim": "fail",
+        "dmarc": "fail",
+        "raw": [
+            "mx.example.com;       spf=fail (google.com: domain of attacker@baddomain.com does not designate 198.51.100.1 as permitted sender) smtp.mailfrom=attacker@baddomain.com;       dkim=fail header.i=@baddomain.com header.s=selector1 header.b=abcde;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=spoofed.com"
+        ]
+    },
+    "routing_ips": [
+        "10.10.10.10",
+        "198.51.100.1"
+    ],
+    "domains": {
+        "From": "spoofed.com",
+        "Reply-To": "baddomain.com",
+        "Return-Path": "baddomain.com"
+    },
+    "heuristics": {
+        "flags": [
+            "Urgency keyword found: 'immediate action required'",
+            "Urgency keyword found: 'verify your account'",
+            "Urgency keyword found: 'kindly review'"
+        ],
+        "detected": true
+    },
+    "html_anomalies": {
+        "anomalies": [],
+        "detected": false
+    },
+    "iocs": {
+        "urls": [
+            "http://malicious.com/login?id=12345"
+        ],
+        "ips": [],
+        "emails": []
+    },
+    "attachments": [
+        {
+            "filename": "invoice.pdf.exe",
+            "size": 74,
+            "hashes": {
+                "md5": "d74bfd46f5e017869d5e2c9e87cef55e",
+                "sha1": "7322c6ed318dbaef6097f2c758211a4f8cb360b9",
+                "sha256": "dce772c6d3642b2d6be80627a8f4f2540c64f6e3bbd71f7aec094165126b160f"
+            },
+            "suspicious_ext": true,
+            "saved_path": null
+        }
+    ],
+    "risk_score": {
+        "score": 100,
+        "tier": "Critical",
+        "color": "red",
+        "breakdown": [
+            "SPF Validation Failed (+20)",
+            "DKIM Validation Failed (+20)",
+            "Domain Mismatch (From: spoofed.com vs Reply-To: baddomain.com) (+25)",
+            "Suspicious Phishing Keywords Detected (+30)",
+            "Suspicious executable/double-extension attachment found (+40)"
+        ]
+    }
+}
